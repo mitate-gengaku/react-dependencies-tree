@@ -1,3 +1,4 @@
+import { Noto_Sans_JP } from "next/font/google";
 import localFont from "next/font/local";
 
 import type { Metadata } from "next";
@@ -8,10 +9,11 @@ const geistSans = localFont({
   variable: "--font-geist-sans",
   weight: "100 900",
 });
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+
+const NotoSansJP = Noto_Sans_JP({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+  variable: "--noto-sans-jp",
 });
 
 export const metadata: Metadata = {
@@ -25,9 +27,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="ja">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.className} ${NotoSansJP.variable} antialiased`}
       >
         {children}
       </body>
