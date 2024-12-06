@@ -1,14 +1,8 @@
+import { GeistSans } from "geist/font/sans";
 import { Noto_Sans_JP } from "next/font/google";
-import localFont from "next/font/local";
 
 import type { Metadata } from "next";
 import "./globals.css";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
 
 const NotoSansJP = Noto_Sans_JP({
   weight: ["400", "500", "600", "700"],
@@ -29,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body
-        className={`${geistSans.className} ${NotoSansJP.variable} antialiased`}
+        className={`${GeistSans.className} ${NotoSansJP.variable} antialiased`}
       >
         {children}
       </body>
