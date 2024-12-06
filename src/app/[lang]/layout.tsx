@@ -8,6 +8,8 @@ import "../globals.css";
 import "@xyflow/react/dist/style.css";
 import { Toaster } from "@/components/ui/sonner";
 
+import { Analytics } from "@vercel/analytics/react";
+
 const NotoSansJP = Noto_Sans_JP({
   weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
@@ -33,6 +35,7 @@ export default async function RootLayout({
         className={`${GeistSans.className} ${NotoSansJP.variable} antialiased`}
       >
         {children}
+        <Analytics />
         <Toaster position="top-right" richColors />
       </body>
     </html>
