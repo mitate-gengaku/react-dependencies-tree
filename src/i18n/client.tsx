@@ -1,19 +1,20 @@
-'use client';
+"use client";
 
+import i18next from "i18next";
+import resourcesToBackend from "i18next-resources-to-backend";
 import React, {
   createContext,
   useContext,
   useEffect,
   useState,
   ReactNode,
-} from 'react';
-import i18next from 'i18next';
+} from "react";
 import {
   initReactI18next,
   useTranslation as useTranslationOrigin,
-} from 'react-i18next';
-import resourcesToBackend from 'i18next-resources-to-backend';
-import { getOptions } from './setting';
+} from "react-i18next";
+
+import { getOptions } from "./setting";
 
 i18next
   .use(initReactI18next)
@@ -68,7 +69,7 @@ export const LanguageProvider = ({
 export const useLanguage = (): LanguageContextType => {
   const context = useContext(LanguageContext);
   if (!context) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
+    throw new Error("useLanguage must be used within a LanguageProvider");
   }
   return context;
 };

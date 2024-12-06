@@ -18,13 +18,15 @@ export const metadata: Metadata = {
   title: "React Dependencies Tree | Reactコンポーネントの結合探索ツール",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-  params: { lang },
+  params,
 }: Readonly<{
   children: React.ReactNode;
-  params: { lang: string };
+  params: Promise<{ lang: string }>;
 }>) {
+  const lang = (await params).lang;
+
   return (
     <html lang={lang} dir={dir(lang)}>
       <body

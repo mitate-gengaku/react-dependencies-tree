@@ -1,12 +1,15 @@
+/* eslint @typescript-eslint/no-explicit-any: 0 */
+
 import * as path from "path";
+
+import { MarkerType } from "@xyflow/react";
+import { v4 as uuidv4 } from "uuid";
 
 import { ELKLayoutCalculator } from "@/feature/elk-layout-calculator";
 import { Edge } from "@/types/edge";
 import { FileAnalysis } from "@/types/file";
 import { Import } from "@/types/import";
 import { Node } from "@/types/node";
-import { v4 as uuidv4 } from 'uuid';
-import { MarkerType } from "@xyflow/react";
 
 class ImportExportAnalyzer {
   private nodes: Node[] = [];
@@ -28,6 +31,7 @@ class ImportExportAnalyzer {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (event) => resolve(event.target?.result as string);
+      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
       reader.onerror = (error) => reject(error);
       reader.readAsText(file);
     });
@@ -81,7 +85,6 @@ class ImportExportAnalyzer {
     const namedExportFromRegex = /export\s+{([^}]+)}\s+from\s+['"]([^'"]+)['"]/;
 
     const exports: string[] = [];
-    let match: RegExpMatchArray | null;
 
     let namedMatch: RegExpExecArray | null;
     while ((namedMatch = namedExportRegex.exec(content)) !== null) {
@@ -110,7 +113,6 @@ class ImportExportAnalyzer {
     const fileAnalyses = await Promise.all(
       jsFiles.map((file) => this.analyzeFile(file)),
     );
-
 
     fileAnalyses.forEach((analysis, index) => {
       const id = uuidv4();
@@ -155,7 +157,7 @@ class ImportExportAnalyzer {
               sourceHandle: "",
               targetHandle: "",
               type: "floating",
-              markerEnd: { type: MarkerType.Arrow }
+              markerEnd: { type: MarkerType.Arrow },
             });
           }
         });

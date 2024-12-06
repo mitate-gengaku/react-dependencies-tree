@@ -1,3 +1,5 @@
+/* eslint @typescript-eslint/no-unsafe-member-access: 0, @typescript-eslint/no-explicit-any: 0, @typescript-eslint/no-unsafe-assignment: 0, @typescript-eslint/no-unsafe-call:0 */
+
 import ELK from "elkjs/lib/elk.bundled.js";
 
 import { Edge } from "@/types/edge";
@@ -46,8 +48,9 @@ export class ELKLayoutCalculator {
       const graph = await this.elk.layout(elkGraph);
 
       const updatedNodes = this.nodes.map((node) => {
-        /* @ts-expect-error */
-        const elkNode = graph.children.find((child) => child.id === node.id);
+        const elkNode = graph.children.find(
+          (child: any) => child.id === node.id,
+        );
         return {
           ...node,
           position: {

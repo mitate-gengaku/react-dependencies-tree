@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write ./app/**/*.{ts,tsx} ; eslint --fix ./app/**/*.{ts,tsx}",
+    "format": "prettier --write ./{app,components,const,feature,i18n,types,utils}/**/*.{ts,tsx} ; eslint --fix ./{app,components,const,feature,i18n,types,utils}/**/*.{ts,tsx}",
     "ncu": "npx ncu",
     "ncu:u": "npx ncu -u",
     "add": "npx shadcn@latest add"

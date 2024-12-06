@@ -15,7 +15,10 @@ import {
   MiniMap,
 } from "@xyflow/react";
 import { CloudUploadIcon, FolderUpIcon } from "lucide-react";
-import React, { DragEvent, DragEventHandler, useCallback, useState } from "react";
+import React, { DragEvent, useCallback, useState } from "react";
+import { toast } from "sonner";
+
+import { Label } from "../ui/label";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -25,15 +28,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { cn } from "@/utils/cn";
-import { Label } from "../ui/label";
-import ImportExportAnalyzer from "@/feature/analyze";
-import { toast } from "sonner";
-import { Node } from "@/types/node";
-import { Edge } from "@/types/edge";
-import { initialNodes } from "@/const/node";
 import { initialEdges } from "@/const/edge";
-  
+import { initialNodes } from "@/const/node";
+import ImportExportAnalyzer from "@/feature/analyze";
+import { Edge } from "@/types/edge";
+import { cn } from "@/utils/cn";
+
 export const ComponentDependencies = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [isActive, setActive] = useState<boolean>(false);
@@ -43,39 +43,39 @@ export const ComponentDependencies = () => {
 
   const handleFolderChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    
-    await parseFiles(files)
+
+    await parseFiles(files);
   };
 
   const onDrop = async (e: React.DragEvent<HTMLLabelElement>) => {
     const files = e.dataTransfer.files;
 
     await parseFiles(files);
-  }
+  };
 
   const parseFiles = async (files: FileList | null) => {
     if (files) {
       if (files.length > 500) {
-        toast.error("ファイルの個数は500以下にしてください。")
+        toast.error("ファイルの個数は500以下にしてください。");
         return;
       }
       const fileArray = Array.from(files);
-      
+
       try {
         const componentGraph = await analyzer.generateComponentGraph(fileArray);
         setNodes(componentGraph.nodes);
-        setEdges(componentGraph.edges)
+        setEdges(componentGraph.edges);
 
-        toast.success("フォルダの解析に成功しました")
-        setOpen(false)
+        toast.success("フォルダの解析に成功しました");
+        setOpen(false);
       } catch (error) {
-        if ( error instanceof Error) {
-          toast.error('グラフ生成エラー: ' + error.message);
+        if (error instanceof Error) {
+          toast.error("グラフ生成エラー: " + error.message);
         }
         return error;
       }
     }
-  }
+  };
 
   const onConnect: OnConnect = useCallback(
     (params) =>
@@ -83,7 +83,7 @@ export const ComponentDependencies = () => {
         addEdge<Edge>(
           {
             ...params,
-            type: 'floating',
+            type: "floating",
             markerEnd: { type: MarkerType.Arrow },
           },
           eds,
@@ -114,7 +114,7 @@ export const ComponentDependencies = () => {
   };
 
   return (
-    <div className="w-screen h-screen">
+    <div className="h-screen w-screen">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -124,10 +124,7 @@ export const ComponentDependencies = () => {
         fitView
       >
         <Panel position="top-right">
-          <Dialog
-            open={open}
-            onOpenChange={setOpen}
-            >
+          <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button variant={"outline"} size={"icon"} className="bg-white">
                 <FolderUpIcon />
@@ -142,7 +139,8 @@ export const ComponentDependencies = () => {
                 htmlFor="file"
                 className={cn(
                   "flex h-56 w-full cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed border-gray-300 bg-card transition-all hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600",
-                  isActive && "border-gray-600 bg-gray-100 dark:border-gray-500 dark:bg-gray-600",
+                  isActive &&
+                    "border-gray-600 bg-gray-100 dark:border-gray-500 dark:bg-gray-600",
                 )}
                 onDragEnter={onDragEnter}
                 onDragLeave={onDragLeave}
@@ -172,9 +170,10 @@ export const ComponentDependencies = () => {
                   className="sr-only"
                   value={""}
                   onChange={handleFolderChange}
-                  // @ts-expect-error 
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-expect-error
                   directory="true"
-                  webkitdirectory="true" 
+                  webkitdirectory="true"
                   multiple={false}
                 />
               </Label>
@@ -187,4 +186,4 @@ export const ComponentDependencies = () => {
       </ReactFlow>
     </div>
   );
-}
+};
