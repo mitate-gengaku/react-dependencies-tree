@@ -4,6 +4,7 @@ import { Noto_Sans_JP } from "next/font/google";
 
 import type { Metadata } from "next";
 import "../globals.css";
+import "@xyflow/react/dist/style.css";
 
 const NotoSansJP = Noto_Sans_JP({
   weight: ["400", "500", "600", "700"],
