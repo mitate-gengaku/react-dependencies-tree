@@ -5,5 +5,9 @@ export interface Node {
     name: string;
     color: string;
   };
-  position: { x: number; y: number };
+  label: string;
+  position: {
+    x: number;
+    y: number;
+  };
 }

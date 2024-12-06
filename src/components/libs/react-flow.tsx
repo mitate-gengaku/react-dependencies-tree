@@ -10,11 +10,12 @@ import {
   Controls,
   Background,
   OnConnect,
-  Connection,
   Panel,
+  MarkerType,
+  MiniMap,
 } from "@xyflow/react";
 import { CloudUploadIcon, FolderUpIcon } from "lucide-react";
-import React, { useCallback } from "react";
+import React, { DragEvent, DragEventHandler, useCallback, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -26,24 +27,94 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/utils/cn";
 import { Label } from "../ui/label";
-
-const initialNodes = [
-  { id: "1", position: { x: 0, y: 0 }, data: { label: "1" } },
-  { id: "2", position: { x: 0, y: 100 }, data: { label: "2" } },
-];
-const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
-
+import ImportExportAnalyzer from "@/feature/analyze";
+import { toast } from "sonner";
+import { Node } from "@/types/node";
+import { Edge } from "@/types/edge";
+import { initialNodes } from "@/const/node";
+import { initialEdges } from "@/const/edge";
+  
 export const ComponentDependencies = () => {
-  const [nodes, _, onNodesChange] = useNodesState(initialNodes);
+  const [open, setOpen] = useState<boolean>(false);
+  const [isActive, setActive] = useState<boolean>(false);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const analyzer = new ImportExportAnalyzer();
+
+  const handleFolderChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    
+    await parseFiles(files)
+  };
+
+  const onDrop = async (e: React.DragEvent<HTMLLabelElement>) => {
+    const files = e.dataTransfer.files;
+
+    await parseFiles(files);
+  }
+
+  const parseFiles = async (files: FileList | null) => {
+    if (files) {
+      if (files.length > 500) {
+        toast.error("ファイルの個数は500以下にしてください。")
+        return;
+      }
+      const fileArray = Array.from(files);
+      
+      try {
+        const componentGraph = await analyzer.generateComponentGraph(fileArray);
+        setNodes(componentGraph.nodes);
+        setEdges(componentGraph.edges)
+
+        toast.success("フォルダの解析に成功しました")
+        setOpen(false)
+      } catch (error) {
+        if ( error instanceof Error) {
+          toast.error('グラフ生成エラー: ' + error.message);
+        }
+        return error;
+      }
+    }
+  }
 
   const onConnect: OnConnect = useCallback(
-    (params: Connection) => setEdges((eds) => addEdge(params, eds)),
+    (params) =>
+      setEdges((eds) =>
+        addEdge<Edge>(
+          {
+            ...params,
+            type: 'floating',
+            markerEnd: { type: MarkerType.Arrow },
+          },
+          eds,
+        ),
+      ),
     [setEdges],
   );
 
+  const onDragEnter = (e: DragEvent<HTMLLabelElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setActive(true);
+  };
+
+  const onDragLeave = (e: DragEvent<HTMLLabelElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setActive(false);
+  };
+
+  const onDragOver = (e: DragEvent<HTMLLabelElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setActive(true);
+  };
+
   return (
-    <div style={{ width: "100vw", height: "100vh" }}>
+    <div className="w-screen h-screen">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -53,7 +124,10 @@ export const ComponentDependencies = () => {
         fitView
       >
         <Panel position="top-right">
-          <Dialog>
+          <Dialog
+            open={open}
+            onOpenChange={setOpen}
+            >
             <DialogTrigger asChild>
               <Button variant={"outline"} size={"icon"} className="bg-white">
                 <FolderUpIcon />
@@ -68,12 +142,12 @@ export const ComponentDependencies = () => {
                 htmlFor="file"
                 className={cn(
                   "flex h-56 w-full cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed border-gray-300 bg-card transition-all hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600",
-                  // isActive && "border-gray-600 bg-gray-100 dark:border-gray-500 dark:bg-gray-600",
+                  isActive && "border-gray-600 bg-gray-100 dark:border-gray-500 dark:bg-gray-600",
                 )}
-                // onDragEnter={onDragEnter}
-                // onDragLeave={onDragLeave}
-                // onDragOver={onDragOver}
-                // onDrop={onDrop}
+                onDragEnter={onDragEnter}
+                onDragLeave={onDragLeave}
+                onDragOver={onDragOver}
+                onDrop={onDrop}
               >
                 <div className="flex flex-col items-center justify-center pb-6 pt-5">
                   <CloudUploadIcon
@@ -96,6 +170,8 @@ export const ComponentDependencies = () => {
                   type="file"
                   accept=".md"
                   className="sr-only"
+                  value={""}
+                  onChange={handleFolderChange}
                   // @ts-expect-error 
                   directory="true"
                   webkitdirectory="true" 
@@ -106,6 +182,7 @@ export const ComponentDependencies = () => {
           </Dialog>
         </Panel>
         <Controls />
+        <MiniMap />
         <Background />
       </ReactFlow>
     </div>

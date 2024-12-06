@@ -5,6 +5,8 @@ import { Edge } from "@/types/edge";
 import { FileAnalysis } from "@/types/file";
 import { Import } from "@/types/import";
 import { Node } from "@/types/node";
+import { v4 as uuidv4 } from 'uuid';
+import { MarkerType } from "@xyflow/react";
 
 class ImportExportAnalyzer {
   private nodes: Node[] = [];
@@ -109,12 +111,15 @@ class ImportExportAnalyzer {
       jsFiles.map((file) => this.analyzeFile(file)),
     );
 
+
     fileAnalyses.forEach((analysis, index) => {
-      const nodeId = `node_${index}`;
+      const id = uuidv4();
+      const nodeId = `node_${index}_${analysis.filePath}_${id}`;
       const node: Node = {
         id: nodeId,
+        label: analysis.filePath,
         data: {
-          label: analysis.fileName,
+          label: analysis.filePath,
           name: analysis.fileName,
           color: this.getRandomColor(),
         },
@@ -133,6 +138,7 @@ class ImportExportAnalyzer {
       const sourceComponent = this.componentMap.get(node.data.name);
       if (sourceComponent) {
         sourceComponent.imports.forEach((importItem) => {
+          const id = uuidv4();
           const targetComponentName = path.basename(
             importItem.source,
             path.extname(importItem.source),
@@ -143,9 +149,13 @@ class ImportExportAnalyzer {
 
           if (targetComponent) {
             this.edges.push({
-              id: `edge_${node.id}_${targetComponent[1].nodeId}`,
+              id: `edge_${node.id}_${targetComponent[1].nodeId}_${id}`,
               source: targetComponent[1].nodeId,
               target: node.id,
+              sourceHandle: "",
+              targetHandle: "",
+              type: "floating",
+              markerEnd: { type: MarkerType.Arrow }
             });
           }
         });
