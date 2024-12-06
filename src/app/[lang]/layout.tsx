@@ -1,8 +1,9 @@
 import { GeistSans } from "geist/font/sans";
+import { dir } from "i18next";
 import { Noto_Sans_JP } from "next/font/google";
 
 import type { Metadata } from "next";
-import "./globals.css";
+import "../globals.css";
 
 const NotoSansJP = Noto_Sans_JP({
   weight: ["400", "500", "600", "700"],
@@ -17,11 +18,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  params: { lang },
 }: Readonly<{
   children: React.ReactNode;
+  params: { lang: string };
 }>) {
   return (
-    <html lang="ja">
+    <html lang={lang} dir={dir(lang)}>
       <body
         className={`${GeistSans.className} ${NotoSansJP.variable} antialiased`}
       >
