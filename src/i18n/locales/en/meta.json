@@ -1,0 +1,4 @@
+{
+  "title": "React Dependencies Tree | React component coupling exploration tool",
+  "description": "React Dependencies Tree is a tool that visualizes the coupling relationships between components. By visualizing these relationships, you can easily analyze the coupling, which helps improve application refactoring efficiency and aids in code reading. This is a recommended tool for React developers."
+}

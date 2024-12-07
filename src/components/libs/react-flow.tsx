@@ -11,15 +11,13 @@ import {
   Background,
   OnConnect,
   Panel,
-  MarkerType,
   MiniMap,
 } from "@xyflow/react";
 import { CloudUploadIcon, FolderUpIcon } from "lucide-react";
 import React, { DragEvent, useCallback, useState } from "react";
 import { toast } from "sonner";
 
-import { Label } from "../ui/label";
-
+import { Spinner } from "@/components/loading/spinner";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -28,37 +26,53 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import { initialEdges } from "@/const/edge";
 import { initialNodes } from "@/const/node";
 import ImportExportAnalyzer from "@/feature/analyze";
+import { useTranslation } from "@/i18n/client";
 import { Edge } from "@/types/edge";
 import { cn } from "@/utils/cn";
 
-export const ComponentDependencies = () => {
+interface Props {
+  lang?: string;
+}
+
+export const ComponentDependencies = ({ lang }: Props) => {
+  const [isLoading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const [isActive, setActive] = useState<boolean>(false);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const analyzer = new ImportExportAnalyzer();
+  const { t } = useTranslation("en");
 
   const handleFolderChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLoading(true);
     const files = e.target.files;
+
+    if (files && files.length > 500) {
+      toast.error(t("toast:exsessive"));
+      return;
+    }
 
     await parseFiles(files);
   };
 
   const onDrop = async (e: React.DragEvent<HTMLLabelElement>) => {
+    setLoading(true);
     const files = e.dataTransfer.files;
+
+    if (files && files.length > 500) {
+      toast.error(t("toast:exsessive"));
+      return;
+    }
 
     await parseFiles(files);
   };
 
   const parseFiles = async (files: FileList | null) => {
     if (files) {
-      if (files.length > 500) {
-        toast.error("ファイルの個数は500以下にしてください。");
-        return;
-      }
       const fileArray = Array.from(files);
 
       try {
@@ -66,11 +80,13 @@ export const ComponentDependencies = () => {
         setNodes(componentGraph.nodes);
         setEdges(componentGraph.edges);
 
-        toast.success("フォルダの解析に成功しました");
+        toast.success(t("toast:success"));
         setOpen(false);
+        setLoading(false);
       } catch (error) {
         if (error instanceof Error) {
-          toast.error("グラフ生成エラー: " + error.message);
+          toast.error(t("toast:error") + error.message);
+          setLoading(false);
         }
         return error;
       }
@@ -84,7 +100,6 @@ export const ComponentDependencies = () => {
           {
             ...params,
             type: "floating",
-            markerEnd: { type: MarkerType.Arrow },
           },
           eds,
         ),
@@ -131,10 +146,8 @@ export const ComponentDependencies = () => {
               </Button>
             </DialogTrigger>
             <DialogContent className="font-noto-sans">
-              <DialogTitle>フォルダーをアップロード</DialogTitle>
-              <DialogDescription>
-                視覚化したいフォルダーを選択・アップロードしてください。
-              </DialogDescription>
+              <DialogTitle>{t("upload:title")}</DialogTitle>
+              <DialogDescription>{t("upload:description")}</DialogDescription>
               <Label
                 htmlFor="file"
                 className={cn(
@@ -148,19 +161,24 @@ export const ComponentDependencies = () => {
                 onDrop={onDrop}
               >
                 <div className="flex flex-col items-center justify-center pb-6 pt-5">
-                  <CloudUploadIcon
-                    className={cn(
-                      "mb-4 size-8 text-gray-500 dark:text-gray-400 xl:size-12",
-                    )}
-                  />
-                  <p
-                    className={cn(
-                      "mb-2 text-sm font-medium leading-none text-gray-500 dark:text-gray-400",
-                    )}
-                  >
-                    <span className="font-semibold">選択</span>
-                    ・ドラッグアンドドロップ
-                  </p>
+                  {isLoading ? (
+                    <Spinner />
+                  ) : (
+                    <>
+                      <CloudUploadIcon
+                        className={cn(
+                          "mb-4 size-8 text-gray-500 dark:text-gray-400 xl:size-12",
+                        )}
+                      />
+                      <p
+                        className={cn(
+                          "mb-2 text-sm font-medium leading-none text-gray-500 dark:text-gray-400",
+                        )}
+                      >
+                        {t("upload:label")}
+                      </p>
+                    </>
+                  )}
                 </div>
                 <input
                   id="file"

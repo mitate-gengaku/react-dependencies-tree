@@ -156,7 +156,6 @@ class ImportExportAnalyzer {
               target: node.id,
               sourceHandle: "",
               targetHandle: "",
-              type: "floating",
               markerEnd: { type: MarkerType.Arrow },
             });
           }

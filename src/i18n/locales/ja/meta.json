@@ -1,0 +1,4 @@
+{
+  "title": "React Dependencies Tree | Reactコンポーネントの結合視覚化ツール",
+  "description": "React Dependencies Treeはコンポーネント間の結合関係をするツールです。視覚化することで結合関係を容易に分析することができ、アプリのリファクタリングの効率化やコードリーディングに役立ちます。React開発者におすすめのツールです。"
+}
