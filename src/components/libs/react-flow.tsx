@@ -45,7 +45,7 @@ export const ComponentDependencies = ({ lang }: Props) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const analyzer = new ImportExportAnalyzer();
-  const { t } = useTranslation("en");
+  const { t } = useTranslation(lang ?? "ja");
 
   const handleFolderChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setLoading(true);
