@@ -9,7 +9,7 @@ export const initialEdges: Edge[] = [
     target: "node_55_App.tsx_31c76292-101b-4762-8776-b8a5390be06f",
     sourceHandle: "",
     targetHandle: "",
-    type: "floating",
+
     markerEnd: { type: MarkerType.Arrow },
   },
   {
@@ -18,7 +18,7 @@ export const initialEdges: Edge[] = [
     target: "node_55_App.tsx_31c76292-101b-4762-8776-b8a5390be06f",
     sourceHandle: "",
     targetHandle: "",
-    type: "floating",
+
     markerEnd: { type: MarkerType.Arrow },
   },
   {
@@ -27,7 +27,7 @@ export const initialEdges: Edge[] = [
     target: "node_55_App.tsx_31c76292-101b-4762-8776-b8a5390be06f",
     sourceHandle: "",
     targetHandle: "",
-    type: "floating",
+
     markerEnd: { type: MarkerType.Arrow },
   },
   {
@@ -37,7 +37,7 @@ export const initialEdges: Edge[] = [
     target: "node_55_App.tsx_31c76292-101b-4762-8776-b8a5390be06f",
     sourceHandle: "",
     targetHandle: "",
-    type: "floating",
+
     markerEnd: { type: MarkerType.Arrow },
   },
   {
@@ -46,7 +46,7 @@ export const initialEdges: Edge[] = [
     target: "node_55_App.tsx_31c76292-101b-4762-8776-b8a5390be06f",
     sourceHandle: "",
     targetHandle: "",
-    type: "floating",
+
     markerEnd: { type: MarkerType.Arrow },
   },
   {
@@ -55,7 +55,7 @@ export const initialEdges: Edge[] = [
     target: "node_55_App.tsx_31c76292-101b-4762-8776-b8a5390be06f",
     sourceHandle: "",
     targetHandle: "",
-    type: "floating",
+
     markerEnd: { type: MarkerType.Arrow },
   },
   {
@@ -64,7 +64,7 @@ export const initialEdges: Edge[] = [
     target: "node_55_App.tsx_31c76292-101b-4762-8776-b8a5390be06f",
     sourceHandle: "",
     targetHandle: "",
-    type: "floating",
+
     markerEnd: { type: MarkerType.Arrow },
   },
   {
@@ -73,7 +73,7 @@ export const initialEdges: Edge[] = [
     target: "node_55_App.tsx_31c76292-101b-4762-8776-b8a5390be06f",
     sourceHandle: "",
     targetHandle: "",
-    type: "floating",
+
     markerEnd: { type: MarkerType.Arrow },
   },
   {
@@ -82,7 +82,7 @@ export const initialEdges: Edge[] = [
     target: "node_55_App.tsx_31c76292-101b-4762-8776-b8a5390be06f",
     sourceHandle: "",
     targetHandle: "",
-    type: "floating",
+
     markerEnd: { type: MarkerType.Arrow },
   },
 ];

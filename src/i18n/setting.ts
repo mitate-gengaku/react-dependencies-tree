@@ -1,6 +1,6 @@
 export const defaultLanguage = "ja";
 export const availableLanguages = [defaultLanguage, "en"];
-export const namespaces = ["translation", "home"];
+export const namespaces = ["meta", "upload"];
 
 export function getOptions(lng = defaultLanguage) {
   return {

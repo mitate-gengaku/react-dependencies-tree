@@ -11,7 +11,6 @@ import {
   Background,
   OnConnect,
   Panel,
-  MarkerType,
   MiniMap,
 } from "@xyflow/react";
 import { CloudUploadIcon, FolderUpIcon } from "lucide-react";
@@ -31,15 +30,21 @@ import {
 import { initialEdges } from "@/const/edge";
 import { initialNodes } from "@/const/node";
 import ImportExportAnalyzer from "@/feature/analyze";
+import { useTranslation } from "@/i18n/client";
 import { Edge } from "@/types/edge";
 import { cn } from "@/utils/cn";
 
-export const ComponentDependencies = () => {
+interface Props {
+  lang?: string;
+}
+
+export const ComponentDependencies = ({ lang }: Props) => {
   const [open, setOpen] = useState<boolean>(false);
   const [isActive, setActive] = useState<boolean>(false);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const analyzer = new ImportExportAnalyzer();
+  const { t } = useTranslation(lang ?? "ja");
 
   const handleFolderChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -84,7 +89,6 @@ export const ComponentDependencies = () => {
           {
             ...params,
             type: "floating",
-            markerEnd: { type: MarkerType.Arrow },
           },
           eds,
         ),
@@ -131,10 +135,8 @@ export const ComponentDependencies = () => {
               </Button>
             </DialogTrigger>
             <DialogContent className="font-noto-sans">
-              <DialogTitle>フォルダーをアップロード</DialogTitle>
-              <DialogDescription>
-                視覚化したいフォルダーを選択・アップロードしてください。
-              </DialogDescription>
+              <DialogTitle>{t("upload:title")}</DialogTitle>
+              <DialogDescription>{t("upload:description")}</DialogDescription>
               <Label
                 htmlFor="file"
                 className={cn(
@@ -158,8 +160,7 @@ export const ComponentDependencies = () => {
                       "mb-2 text-sm font-medium leading-none text-gray-500 dark:text-gray-400",
                     )}
                   >
-                    <span className="font-semibold">選択</span>
-                    ・ドラッグアンドドロップ
+                    {t("upload:label")}
                   </p>
                 </div>
                 <input
