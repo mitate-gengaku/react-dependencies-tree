@@ -1,0 +1,5 @@
+{
+  "success": "Folder parsed successfully.",
+  "exsessive": "Total number of files should not exceed 500.",
+  "error": "Generation Error: "
+}
