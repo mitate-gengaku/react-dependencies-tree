@@ -10,7 +10,6 @@ import {
   Controls,
   Background,
   OnConnect,
-  Panel,
   MiniMap,
 } from "@xyflow/react";
 import { CloudUploadIcon, FolderUpIcon } from "lucide-react";
@@ -130,6 +129,66 @@ export const ComponentDependencies = ({ lang }: Props) => {
 
   return (
     <div className="h-screen w-screen">
+      <div className="absolute right-4 top-4 z-10 flex items-center gap-4">
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger asChild>
+            <Button variant={"outline"} size={"icon"} className="bg-white">
+              <FolderUpIcon />
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="font-noto-sans">
+            <DialogTitle>{t("upload:title")}</DialogTitle>
+            <DialogDescription>{t("upload:description")}</DialogDescription>
+            <Label
+              htmlFor="file"
+              className={cn(
+                "flex h-56 w-full cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed border-gray-300 bg-card transition-all hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600",
+                isActive &&
+                  "border-gray-600 bg-gray-100 dark:border-gray-500 dark:bg-gray-600",
+              )}
+              onDragEnter={onDragEnter}
+              onDragLeave={onDragLeave}
+              onDragOver={onDragOver}
+              onDrop={onDrop}
+            >
+              <div className="flex flex-col items-center justify-center pb-6 pt-5">
+                {isLoading ? (
+                  <Spinner />
+                ) : (
+                  <>
+                    <CloudUploadIcon
+                      className={cn(
+                        "mb-4 size-8 text-gray-500 dark:text-gray-400 xl:size-12",
+                      )}
+                    />
+                    <p
+                      className={cn(
+                        "mb-2 text-sm font-medium leading-none text-gray-500 dark:text-gray-400",
+                      )}
+                    >
+                      {t("upload:label")}
+                    </p>
+                  </>
+                )}
+              </div>
+              <input
+                id="file"
+                name="file"
+                type="file"
+                accept=".md"
+                className="sr-only"
+                value={""}
+                onChange={handleFolderChange}
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
+                directory="true"
+                webkitdirectory="true"
+                multiple={false}
+              />
+            </Label>
+          </DialogContent>
+        </Dialog>
+      </div>
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -138,66 +197,6 @@ export const ComponentDependencies = ({ lang }: Props) => {
         onConnect={onConnect}
         fitView
       >
-        <Panel position="top-right">
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <Button variant={"outline"} size={"icon"} className="bg-white">
-                <FolderUpIcon />
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="font-noto-sans">
-              <DialogTitle>{t("upload:title")}</DialogTitle>
-              <DialogDescription>{t("upload:description")}</DialogDescription>
-              <Label
-                htmlFor="file"
-                className={cn(
-                  "flex h-56 w-full cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed border-gray-300 bg-card transition-all hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600",
-                  isActive &&
-                    "border-gray-600 bg-gray-100 dark:border-gray-500 dark:bg-gray-600",
-                )}
-                onDragEnter={onDragEnter}
-                onDragLeave={onDragLeave}
-                onDragOver={onDragOver}
-                onDrop={onDrop}
-              >
-                <div className="flex flex-col items-center justify-center pb-6 pt-5">
-                  {isLoading ? (
-                    <Spinner />
-                  ) : (
-                    <>
-                      <CloudUploadIcon
-                        className={cn(
-                          "mb-4 size-8 text-gray-500 dark:text-gray-400 xl:size-12",
-                        )}
-                      />
-                      <p
-                        className={cn(
-                          "mb-2 text-sm font-medium leading-none text-gray-500 dark:text-gray-400",
-                        )}
-                      >
-                        {t("upload:label")}
-                      </p>
-                    </>
-                  )}
-                </div>
-                <input
-                  id="file"
-                  name="file"
-                  type="file"
-                  accept=".md"
-                  className="sr-only"
-                  value={""}
-                  onChange={handleFolderChange}
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                  // @ts-expect-error
-                  directory="true"
-                  webkitdirectory="true"
-                  multiple={false}
-                />
-              </Label>
-            </DialogContent>
-          </Dialog>
-        </Panel>
         <Controls />
         <MiniMap />
         <Background />
